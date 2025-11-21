@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Reserva de Mesa • Mercatto Delícia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#fafafa;--card:#fff;--text:#111827;--muted:#6b7280;
+  --accent:#b8860b;--accent-dark:#8b6a05;--radius:12px;
+  --shadow:0 6px 18px rgba(0,0,0,.08);
+}
+body{
+  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  flex-direction:column;padding:0;margin:0;
+}
+
+/* ========================= LOGIN ========================= */
+#loginBox{
+  background:var(--card);padding:26px;border-radius:var(--radius);
+  box-shadow:var(--shadow);width:92%;max-width:420px;
+}
+#loginBox h1{text-align:center;margin-bottom:20px;color:var(--accent);}
+
+.login-input{
+  width:100%;padding:12px;margin-bottom:12px;border:1px solid #ddd;
+  border-radius:var(--radius);font-size:15px;
+}
+#btnLogin{
+  background:var(--accent);border:none;color:#fff;padding:12px;
+  width:100%;border-radius:var(--radius);font-size:16px;cursor:pointer;
+  margin-top:10px;font-weight:600;
+}
+#btnLogin:hover{background:var(--accent-dark);}
+
+/* ========================= FORM ========================= */
+#appBox{display:none;}
+
+.banner{
+  width:100%;text-align:center;background:var(--accent);
+  color:#fff;padding:16px 0;font-size:1.3rem;font-weight:700;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);letter-spacing:.5px;
+}
+
+form{
+  background:var(--card);padding:24px;border-radius:var(--radius);
+  box-shadow:var(--shadow);width:92%;max-width:420px;margin-top:20px;
+}
+h1{text-align:center;color:var(--accent);margin-bottom:16px;font-size:1.4rem;}
+
+label{font-weight:600;display:block;margin:12px 0 4px;}
+
+input,select,textarea{
+  width:100%;padding:12px;border:1px solid #d1d5db;border-radius:var(--radius);
+  font-size:15px;outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--accent);box-shadow:0 0 0 2px rgba(184,134,11,.2);
+}
+.row{display:flex;gap:10px;}
+.row>div{flex:1;}
+
+.radio-group{display:flex;gap:15px;align-items:center;margin-top:6px;}
+.radio-group label{font-weight:400;cursor:pointer;}
+
+button{
+  width:100%;background:var(--accent);color:#fff;font-weight:600;
+  border:none;padding:12px;border-radius:var(--radius);margin-top:20px;
+  font-size:16px;cursor:pointer;position:relative;overflow:hidden;
+  transition:background .2s ease;
+}
+button:hover{background:var(--accent-dark);}
+button:disabled{opacity:0.8;cursor:not-allowed;}
+
+.btn-loader{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  display:none;width:20px;height:20px;border:2px solid #fff;
+  border-top:2px solid transparent;border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+/* Popup */
+.popup-overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;
+  z-index:99;
+}
+.popup{
+  background:#fff;border-radius:var(--radius);padding:24px;text-align:center;
+  box-shadow:var(--shadow);width:85%;max-width:360px;animation:fadeIn .3s ease;
+}
+.popup h2{color:var(--accent);margin-bottom:10px;}
+.popup p{color:var(--text);font-size:.95rem;margin-bottom:20px;}
+.popup button{
+  background:var(--accent);color:#fff;border:none;border-radius:var(--radius);
+  padding:10px 20px;font-weight:600;cursor:pointer;font-size:.95rem;
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+
+/* Outros */
+#alerta-email{
+  font-size:.85rem;color:var(--muted);margin-top:10px;text-align:center;
+  background:#fff8e6;border:1px solid #fcd34d;padding:8px;border-radius:var(--radius);
+}
+#campoOutro{display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h1>Login</h1>
+
+  <input id="loginUser" class="login-input" placeholder="Usuário" autocomplete="off">
+  <input id="loginPass" class="login-input" placeholder="Senha" type="password">
+
+  <button id="btnLogin">Entrar</button>
+</div>
+
+<!-- APLICATIVO -->
+<div id="appBox">
+
+<div class="banner">🍽️ Mercatto Delícia</div>
+
+<form id="reservaForm">
+  <h1>Reserva de Mesa</h1>
+
+  <label>Nome Completo</label>
+  <input type="text" name="nome" required>
+
+  <label>E-mail</label>
+  <input type="email" name="email" required>
+
+  <div class="row">
+    <div>
+      <label>Data</label>
+      <input type="date" name="data" required>
+    </div>
+    <div>
+      <label>Horário</label>
+      <input type="time" name="horario" required>
+    </div>
+  </div>
+
+  <label>Área</label>
+  <select name="area" required>
+    <option value="">Selecione</option>
+    <option>Salão Principal</option>
+    <option>Varanda</option>
+    <option>Área Externa</option>
+    <option>VIP / Reservado</option>
+  </select>
+
+  <label>Nº de Pessoas</label>
+  <input type="number" name="pessoas" min="1" required>
+
+  <label>Contato (WhatsApp)</label>
+  <input type="tel" name="contato" id="whatsapp" maxlength="15" required>
+
+  <label>Ocasião</label>
+  <select name="ocasiao" id="ocasiao" required>
+    <option value="">Selecione</option>
+    <option>Aniversário</option>
+    <option>Reunião</option>
+    <option>Confraternização</option>
+    <option value="Outro">Outro</option>
+  </select>
+
+  <div id="campoOutro">
+    <label>Descreva a Ocasião</label>
+    <input type="text" name="ocasiao_outro">
+  </div>
+
+  <label>Decoração</label>
+  <input type="text" name="decoracao" placeholder="Ex: Balões, flores...">
+
+  <label>Comandas Individuais</label>
+  <div class="radio-group">
+    <label><input type="radio" name="comandas" value="Sim" required> Sim</label>
+    <label><input type="radio" name="comandas" value="Não" required> Não</label>
+  </div>
+
+  <label>Observações</label>
+  <textarea name="obs" rows="3"></textarea>
+
+  <div id="alerta-email">A confirmação será enviada por e-mail.</div>
+
+  <button type="submit" id="btnEnviar">
+    <span class="btn-text">Enviar Reserva</span>
+    <div class="btn-loader"></div>
+  </button>
+</form>
+
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <h2>✅ Reserva Enviada!</h2>
+    <p>Sua solicitação foi registrada com sucesso.</p>
+    <button onclick="fecharPopup()">Fechar</button>
+  </div>
+</div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbzIsRIuWAi4IoueIV7f8-5vhKWBLTg3HfoTC6Rk5UWAFyzeK3pba9Cjvs5di7xbF_JxsA/exec"; // <-- substituir depois
+
+/* ======== LOGIN ======== */
+const loginBox = document.getElementById("loginBox");
+const appBox = document.getElementById("appBox");
+const btnLogin = document.getElementById("btnLogin");
+
+btnLogin.addEventListener("click", async () => {
+  const usuario = loginUser.value.trim();
+  const senha   = loginPass.value.trim();
+
+  if (!usuario || !senha) {
+    alert("Preencha usuário e senha.");
+    return;
+  }
+
+  const body = { action: "login", usuario, senha };
+
+  const res = await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(body)
+  }).then(r=>r.json());
+
+  if (!res.ok) {
+    alert("Usuário ou senha incorretos.");
+    return;
+  }
+
+  localStorage.setItem("USER", JSON.stringify(res));
+
+  loginBox.style.display = "none";
+  appBox.style.display = "block";
+});
+
+/* CARREGAR SESSÃO AUTOMÁTICA */
+window.onload = () => {
+  const u = localStorage.getItem("USER");
+  if (u) {
+    loginBox.style.display = "none";
+    appBox.style.display = "block";
+  }
+};
+
+/* ======== FORMULARIO ======== */
+const form = document.getElementById('reservaForm');
+const ocasiaoSelect = document.getElementById('ocasiao');
+const campoOutro = document.getElementById('campoOutro');
+const whatsappInput = document.getElementById('whatsapp');
+const popup = document.getElementById('popup');
+const btn = document.getElementById('btnEnviar');
+const btnText = btn.querySelector('.btn-text');
+const btnLoader = btn.querySelector('.btn-loader');
+
+ocasiaoSelect.addEventListener('change',()=>{
+  campoOutro.style.display = ocasiaoSelect.value==='Outro'?'block':'none';
+});
+
+whatsappInput.addEventListener('input',(e)=>{
+  let v=e.target.value.replace(/\D/g,'');
+  v=v.replace(/^(\d{2})(\d)/g,'($1) $2');
+  v=v.replace(/(\d{5})(\d)/,'$1-$2');
+  e.target.value=v.substring(0,15);
+});
+
+/* ENVIO DE RESERVA */
+form.addEventListener('submit',async(e)=>{
+  e.preventDefault();
+
+  const USER = JSON.parse(localStorage.getItem("USER"));
+  if (!USER) {
+    alert("Você precisa estar logado.");
+    return;
+  }
+
+  btn.disabled=true;
+  btnText.style.opacity='0';
+  btnLoader.style.display='block';
+
+  const data = Object.fromEntries(new FormData(form).entries());
+  data.action = "registrarReserva";
+  data.codigoAba = USER.codigo;
+
+  try{
+    const r = await fetch(scriptURL,{
+      method:'POST',
+      body:JSON.stringify(data)
+    }).then(r=>r.json());
+
+    if (r.ok){
+      form.reset();
+      campoOutro.style.display='none';
+      abrirPopup();
+    } else {
+      alert("Erro ao enviar.");
+    }
+  }catch{
+    alert("Erro ao conectar.");
+  }finally{
+    btn.disabled=false;
+    btnText.style.opacity='1';
+    btnLoader.style.display='none';
+  }
+});
+
+function abrirPopup(){ popup.style.display='flex'; }
+function fecharPopup(){ popup.style.display='none'; }
+</script>
+
+</body>
+</html>
