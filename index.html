@@ -1,320 +1,1084 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Reserva de Mesa • Mercatto Delícia</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<title>Mercatto Delícia • Reservas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+<!-- =====================
+   TEMA C — Branco + Dourado
+===================== -->
 
 <style>
 :root{
-  --bg:#fafafa;--card:#fff;--text:#111827;--muted:#6b7280;
-  --accent:#b8860b;--accent-dark:#8b6a05;--radius:12px;
-  --shadow:0 6px 18px rgba(0,0,0,.08);
+  --bg:#f8f8f8;
+  --card:#ffffff;
+  --text:#2d2d2d;
+  --muted:#7a7a7a;
+  --line:#e2e2e2;
+
+  --gold:#d4a437;
+  --gold-dark:#b88714;
+  --gold-light:#f5e4b3;
+
+  --radius:18px;
+  --shadow:0 12px 28px rgba(0,0,0,.08);
+  --glass: rgba(255,255,255,.45);
 }
+
+/* ===========================
+   BASE
+=========================== */
+
+*{box-sizing:border-box;font-family:'Inter',sans-serif;}
 body{
-  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
-  display:flex;align-items:center;justify-content:center;min-height:100vh;
-  flex-direction:column;padding:0;margin:0;
+  margin:0;background:var(--bg);color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(900px 600px at -5% -10%, rgba(212,164,55,.12), transparent 70%),
+    radial-gradient(900px 700px at 110% -10%, rgba(255,215,160,.12), transparent 70%),
+    var(--bg);
 }
 
-/* ========================= LOGIN ========================= */
-#loginBox{
-  background:var(--card);padding:26px;border-radius:var(--radius);
-  box-shadow:var(--shadow);width:92%;max-width:420px;
-}
-#loginBox h1{text-align:center;margin-bottom:20px;color:var(--accent);}
+.wrap{max-width:1250px;margin:auto;padding:26px 18px 40px;}
 
-.login-input{
-  width:100%;padding:12px;margin-bottom:12px;border:1px solid #ddd;
-  border-radius:var(--radius);font-size:15px;
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4px;margin-bottom:22px;
 }
-#btnLogin{
-  background:var(--accent);border:none;color:#fff;padding:12px;
-  width:100%;border-radius:var(--radius);font-size:16px;cursor:pointer;
-  margin-top:10px;font-weight:600;
+.title{
+  font-size:clamp(1.3rem,2.8vw,1.9rem);
+  font-weight:900;letter-spacing:.3px;
+  color:var(--gold-dark);
+  display:flex;align-items:center;gap:12px;
 }
-#btnLogin:hover{background:var(--accent-dark);}
-
-/* ========================= FORM ========================= */
-#appBox{display:none;}
-
-.banner{
-  width:100%;text-align:center;background:var(--accent);
-  color:#fff;padding:16px 0;font-size:1.3rem;font-weight:700;
-  box-shadow:0 2px 10px rgba(0,0,0,.1);letter-spacing:.5px;
+.badge{
+  padding:6px 12px;border-radius:999px;
+  font-size:.82rem;font-weight:700;
+  background:linear-gradient(90deg,var(--gold),var(--gold-dark));
+  color:#fff;box-shadow:var(--shadow);
 }
 
-form{
-  background:var(--card);padding:24px;border-radius:var(--radius);
-  box-shadow:var(--shadow);width:92%;max-width:420px;margin-top:20px;
+/* ===========================
+   LOGIN / CADASTRO
+=========================== */
+
+#authBox{
+  max-width:420px;margin:60px auto;
+  background:var(--card);
+  padding:28px;border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  animation:fadeIn .4s ease;
 }
-h1{text-align:center;color:var(--accent);margin-bottom:16px;font-size:1.4rem;}
+#authTabs{
+  display:flex;margin-bottom:20px;
+}
+.auth-tab{
+  flex:1;text-align:center;padding:12px 0;
+  border-bottom:3px solid transparent;
+  font-weight:700;color:var(--muted);
+  cursor:pointer;transition:.2s;
+}
+.auth-tab.active{
+  color:var(--gold-dark);
+  border-color:var(--gold);
+}
 
-label{font-weight:600;display:block;margin:12px 0 4px;}
+.auth-input{
+  width:100%;padding:12px;margin-bottom:14px;
+  border-radius:var(--radius);border:1px solid var(--line);
+  font-size:15px;outline:none;transition:.15s;
+}
+.auth-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(212,164,55,.25);
+}
 
+.btn-auth{
+  width:100%;padding:12px;font-size:16px;font-weight:700;
+  border:none;border-radius:var(--radius);
+  cursor:pointer;color:#fff;
+  background:linear-gradient(90deg,var(--gold),var(--gold-dark));
+  box-shadow:var(--shadow);
+}
+.btn-auth:hover{filter:brightness(.95);}
+
+/* fade animation */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===========================
+   CARDS / FORM PADRÃO
+=========================== */
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter:blur(6px);
+  animation:fadeIn .5s ease;
+}
+
+.card-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px;
+  background:var(--glass);
+  border-bottom:1px solid var(--line);
+}
+.card-head h2{
+  margin:0;font-size:1.1rem;color:var(--gold-dark);
+}
+
+.section{
+  padding:20px;
+}
+.section + .section{
+  border-top:1px dashed var(--line);
+}
+.section h3{
+  margin:0 0 12px;font-size:.95rem;
+  color:var(--gold-dark);font-weight:800;
+}
+
+/* Inputs */
+
+label{font-weight:600;margin-bottom:4px;display:block;color:var(--text);}
+input,select,textarea,button{
+  font-size:15px;border-radius:var(--radius);
+}
 input,select,textarea{
-  width:100%;padding:12px;border:1px solid #d1d5db;border-radius:var(--radius);
-  font-size:15px;outline:none;
+  width:100%;padding:12px;
+  border:1px solid var(--line);
+  outline:none;transition:.15s;
 }
 input:focus,select:focus,textarea:focus{
-  border-color:var(--accent);box-shadow:0 0 0 2px rgba(184,134,11,.2);
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(212,164,55,.25);
 }
-.row{display:flex;gap:10px;}
-.row>div{flex:1;}
 
-.radio-group{display:flex;gap:15px;align-items:center;margin-top:6px;}
-.radio-group label{font-weight:400;cursor:pointer;}
+textarea{resize:vertical;min-height:80px;}
 
-button{
-  width:100%;background:var(--accent);color:#fff;font-weight:600;
-  border:none;padding:12px;border-radius:var(--radius);margin-top:20px;
-  font-size:16px;cursor:pointer;position:relative;overflow:hidden;
-  transition:background .2s ease;
+/* linhas inline */
+.inline-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.inline-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:760px){
+  .inline-grid,.inline-3{grid-template-columns:1fr;}
 }
-button:hover{background:var(--accent-dark);}
-button:disabled{opacity:0.8;cursor:not-allowed;}
 
-.btn-loader{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  display:none;width:20px;height:20px;border:2px solid #fff;
-  border-top:2px solid transparent;border-radius:50%;
-  animation:spin 0.8s linear infinite;
+/* botoes */
+.btn{
+  padding:12px;border:none;cursor:pointer;
+  font-weight:700;transition:.2s;border-radius:var(--radius);
 }
-@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+.btn-primary{
+  background:linear-gradient(90deg,var(--gold),var(--gold-dark));
+  color:#fff;
+}
+.btn-primary:hover{filter:brightness(.92);}
+.btn-ghost{
+  background:transparent;border:1px dashed var(--line);color:var(--muted);
+}
+.btn-danger{
+  background:var(--danger);color:#fff;
+}
 
-/* Popup */
-.popup-overlay{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;
-  z-index:99;
+/* chips */
+.chip{
+  background:var(--glass);padding:6px 10px;
+  border-radius:999px;font-size:.82rem;color:var(--muted);
+  border:1px solid var(--line);
+  backdrop-filter:blur(6px);
 }
-.popup{
-  background:#fff;border-radius:var(--radius);padding:24px;text-align:center;
-  box-shadow:var(--shadow);width:85%;max-width:360px;animation:fadeIn .3s ease;
-}
-.popup h2{color:var(--accent);margin-bottom:10px;}
-.popup p{color:var(--text);font-size:.95rem;margin-bottom:20px;}
-.popup button{
-  background:var(--accent);color:#fff;border:none;border-radius:var(--radius);
-  padding:10px 20px;font-weight:600;cursor:pointer;font-size:.95rem;
-}
-@keyframes fadeIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
 
-/* Outros */
-#alerta-email{
-  font-size:.85rem;color:var(--muted);margin-top:10px;text-align:center;
-  background:#fff8e6;border:1px solid #fcd34d;padding:8px;border-radius:var(--radius);
+/* ===========================
+   CALENDÁRIO
+=========================== */
+
+.cal{padding:16px;}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cal-title{font-size:1.15rem;font-weight:800;color:var(--gold-dark);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px;}
+.cal-dow{text-align:center;font-size:.85rem;color:var(--muted);}
+
+.cal-day{
+  min-height:110px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  position:relative;
+  cursor:pointer;
+  transition:.15s;
 }
-#campoOutro{display:none;}
+.cal-day:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.cal-day.out{opacity:.45;}
+
+.cal-day .num{
+  font-size:1rem;font-weight:800;
+}
+.tags{
+  position:absolute;bottom:10px;left:10px;right:10px;
+  display:flex;flex-wrap:wrap;gap:4px;
+}
+.tag{
+  padding:4px 6px;border-radius:999px;
+  font-size:.72rem;border:1px solid var(--line);
+  background:var(--glass);
+}
+.t-vip{background:#fff5d6;border-color:#f1cf7b;color:#8a6b00;}
+.t-outros{background:#ffe9d6;border-color:#f5c7a0;color:#9a4e12;}
+.t-pend{background:#fff4cc;border-color:#ffe399;}
+.t-done{background:#e2ffd9;border-color:#b9e8a6;}
+
+/* ===========================
+   MODAIS
+=========================== */
+
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:none;align-items:flex-end;justify-content:center;
+  z-index:90;
+}
+.modal.show{display:flex;}
+
+.sheet{
+  background:var(--card);width:100%;max-width:540px;
+  max-height:85vh;overflow:auto;border-radius:20px 20px 0 0;
+  box-shadow:0 -10px 30px rgba(0,0,0,.25);
+}
+
+.res-item{
+  border:1px solid var(--line);border-radius:14px;
+  padding:12px;margin-bottom:12px;background:var(--glass);
+  backdrop-filter:blur(6px);
+}
+.res-item .top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.res-item .name{font-weight:800;font-size:1rem;color:var(--gold-dark);}
+.res-item .meta{font-size:.82rem;color:var(--muted);margin-top:2px;}
+/* ===== CONTINUAÇÃO DO CSS ===== */
+
+.btn-concluir{
+  background:var(--gold);color:#fff;font-weight:700;
+  border-radius:12px;padding:6px 12px;border:none;
+}
+.btn-editar{
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold-dark);border-radius:12px;padding:6px 12px;
+}
+
+/* Toast */
+.toast{
+  position:fixed;right:16px;bottom:16px;
+  background:#2d2d2d;color:#fff;padding:12px 14px;
+  border-radius:12px;font-size:.9rem;display:none;
+  box-shadow:var(--shadow);z-index:200;
+}
+.toast.show{display:block;}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginBox">
-  <h1>Login</h1>
+<!-- ===========================
+     LOGIN + CADASTRO
+=========================== -->
+<div id="authBox">
+  <div id="authTabs">
+    <div class="auth-tab active" id="tabLogin">Entrar</div>
+    <div class="auth-tab" id="tabCadastro">Cadastrar</div>
+  </div>
 
-  <input id="loginUser" class="login-input" placeholder="Usuário" autocomplete="off">
-  <input id="loginPass" class="login-input" placeholder="Senha" type="password">
+  <!-- LOGIN -->
+  <div id="loginForm">
+    <input type="text" id="loginUsuario" class="auth-input" placeholder="Usuário" autocomplete="off">
+    <input type="password" id="loginSenha" class="auth-input" placeholder="Senha">
 
-  <button id="btnLogin">Entrar</button>
+    <button class="btn-auth" id="btnLogin">Entrar</button>
+  </div>
+
+  <!-- CADASTRO -->
+  <div id="cadastroForm" style="display:none;">
+    <input type="text" id="cadNome" class="auth-input" placeholder="Nome completo">
+    <input type="email" id="cadEmail" class="auth-input" placeholder="E-mail">
+    <input type="text" id="cadUsuario" class="auth-input" placeholder="Usuário desejado">
+    <input type="password" id="cadSenha" class="auth-input" placeholder="Senha">
+
+    <button class="btn-auth" id="btnCadastrar">Criar Usuário</button>
+  </div>
 </div>
 
-<!-- APLICATIVO -->
-<div id="appBox">
+<!-- ===========================
+     APLICATIVO (DEPOIS DO LOGIN)
+=========================== -->
+<div id="app" style="display:none;">
+  <div class="wrap">
 
-<div class="banner">🍽️ Mercatto Delícia</div>
+    <header>
+      <div class="title">Reservas • Mercatto Delícia</div>
+      <div class="badge">Formulário → Calendário → Resumo</div>
+    </header>
 
-<form id="reservaForm">
-  <h1>Reserva de Mesa</h1>
+    <!-- =======================
+         FORMULÁRIO DE RESERVA
+    ======================= -->
+    <form id="reservaForm" class="card" novalidate>
+      <div class="card-head">
+        <h2>Nova Reserva</h2>
+      </div>
 
-  <label>Nome Completo</label>
-  <input type="text" name="nome" required>
+      <input type="hidden" name="acao" value="cadastrar">
+      <input type="hidden" name="status" value="Pendente">
+      <input type="hidden" name="id" id="reservaId" value="">
+      <input type="hidden" name="codigoAba" id="codigoAba">
 
-  <label>E-mail</label>
-  <input type="email" name="email" required>
+      <!-- DADOS DO CLIENTE -->
+      <div class="section">
+        <h3>👤 Dados do Cliente</h3>
 
-  <div class="row">
-    <div>
-      <label>Data</label>
-      <input type="date" name="data" required>
+        <div class="inline-grid">
+          <div>
+            <label>Nome Completo *</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+
+          <div>
+            <label>E-mail *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div>
+            <label>Telefone (WhatsApp) *</label>
+            <input type="tel" id="telefone" name="telefone" required placeholder="(99) 99999-9999">
+          </div>
+
+          <div>
+            <label>Pessoas *</label>
+            <input type="number" min="1" id="pessoas" name="pessoas" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETALHES -->
+      <div class="section">
+        <h3>🪑 Detalhes da Reserva</h3>
+
+        <div class="inline-grid">
+          <div>
+            <label>Local *</label>
+            <select id="mesa" name="mesa" required>
+              <option value="">Selecione</option>
+              <option>SALA VIP</option>
+              <option>SALA VIP 2</option>
+              <option>SACADA</option>
+              <option>SALÃO CENTRAL</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Cardápio</label>
+            <select id="cardapio" name="cardapio">
+              <option value="">Selecione</option>
+              <option>Buffet Ouro</option>
+              <option>Buffet Diamante</option>
+              <option>Master Gold</option>
+              <option>Rodízio Pizza</option>
+              <option>Rodízio Happy Hour</option>
+              <option>À la carte</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Data e Hora *</label>
+        <input type="datetime-local" id="datahora" name="datahora" required>
+      </div>
+
+      <!-- VALORES -->
+      <div class="section">
+        <h3>💳 Pagamento</h3>
+
+        <div class="inline-3">
+          <div>
+            <label>Valor Estimado (R$)</label>
+            <input id="valorEstimado" name="valorEstimado">
+          </div>
+
+          <div>
+            <label>Antecipado (R$)</label>
+            <input id="pagamentoAntecipado" name="pagamentoAntecipado">
+          </div>
+
+          <div>
+            <label>Banco</label>
+            <select id="banco" name="banco">
+              <option value="">Selecione</option>
+              <option>SICREDI</option>
+              <option>ITAÚ</option>
+              <option>CRÉDITO POS</option>
+              <option>DÉBITO POS</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBS & ANEXO -->
+      <div class="section">
+        <h3>📝 Observações & Comprovante</h3>
+
+        <div class="inline-grid">
+          <div>
+            <label>Observações</label>
+            <textarea id="observacoes" name="observacoes"></textarea>
+          </div>
+
+          <div>
+            <label>Comprovante (PDF/JPG/PNG)</label>
+            <input id="arquivo" type="file" accept=".pdf,.jpg,.jpeg,.png">
+            <div id="fileBox" style="display:none;margin-top:8px;border:1px dashed var(--line);
+              border-radius:12px;padding:10px;display:flex;justify-content:space-between;">
+              <div id="fileName"></div>
+              <button type="button" id="clearFile" class="btn btn-danger" style="width:auto;">Remover</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="row" style="display:flex;justify-content:space-between;">
+          <span class="chip">Status: <b id="statusChip">PENDENTE</b></span>
+          <span class="chip">Envio seguro</span>
+        </div>
+      </div>
+
+      <footer style="padding:18px;display:flex;justify-content:flex-end;gap:12px;">
+        <button type="reset" class="btn btn-ghost">Limpar</button>
+        <button type="submit" id="submitBtn" class="btn btn-primary">Salvar Reserva</button>
+      </footer>
+    </form>
+
+    <!-- ===========================
+         CALENDÁRIO + RESUMO
+    ============================ -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-head">
+        <h2>Calendário de Reservas</h2>
+        <div class="toolbar" style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" id="prevMonth">◀ Mês anterior</button>
+          <button class="btn btn-ghost" id="todayBtn">Hoje</button>
+          <button class="btn btn-ghost" id="nextMonth">Próximo mês ▶</button>
+        </div>
+      </div>
+
+      <div class="cal">
+        <div class="cal-head">
+          <div class="cal-title" id="calTitle">–</div>
+        </div>
+
+        <div class="cal-grid" id="calDow"></div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+
+      <div class="summary" style="padding:18px;border-top:1px dashed var(--line);background:var(--glass);backdrop-filter:blur(6px);">
+        <h3 style="margin-top:0;color:var(--muted);">Resumo do mês</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;" id="kpiGrid">
+          <div class="kpi">
+            <div class="label">Antecipado</div>
+            <div class="value" id="kpiAntecipado">R$ 0,00</div>
+          </div>
+
+          <div class="kpi">
+            <div class="label">Final Pago</div>
+            <div class="value" id="kpiFinalPago">R$ 0,00</div>
+          </div>
+
+          <div class="kpi">
+            <div class="label">A Receber</div>
+            <div class="value" id="kpiAReceber">R$ 0,00</div>
+          </div>
+        </div>
+
+        <div class="kpi" style="margin-top:12px;">
+          <div class="label">Total do mês</div>
+          <div class="value" id="kpiTotalMes">R$ 0,00</div>
+          <button id="refreshBtn" class="btn btn-ghost" style="margin-top:8px;width:auto;">Atualizar</button>
+        </div>
+      </div>
     </div>
-    <div>
-      <label>Horário</label>
-      <input type="time" name="horario" required>
+  </div>
+</div>
+
+<!-- MODAL DO DIA -->
+<div class="modal" id="dayModal">
+  <div class="sheet">
+    <h3 id="modalTitle" style="padding:18px;">Reservas do Dia</h3>
+    <div class="list" id="modalList" style="padding:18px;"></div>
+  </div>
+</div>
+
+<!-- MODAL DE CONCLUSÃO -->
+<div class="modal" id="finishModal">
+  <div class="sheet" style="max-width:420px;border-radius:16px;">
+    <div style="padding:18px;">
+      <h3>Concluir Reserva</h3>
+
+      <label>Valor final pago (R$)</label>
+      <input id="finalPagoInput" type="text" inputmode="decimal" placeholder="0,00">
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+        <button class="btn btn-ghost" id="cancelFinish">Cancelar</button>
+        <button class="btn btn-primary" id="confirmFinish">Concluir</button>
+      </div>
     </div>
   </div>
-
-  <label>Área</label>
-  <select name="area" required>
-    <option value="">Selecione</option>
-    <option>Salão Principal</option>
-    <option>Varanda</option>
-    <option>Área Externa</option>
-    <option>VIP / Reservado</option>
-  </select>
-
-  <label>Nº de Pessoas</label>
-  <input type="number" name="pessoas" min="1" required>
-
-  <label>Contato (WhatsApp)</label>
-  <input type="tel" name="contato" id="whatsapp" maxlength="15" required>
-
-  <label>Ocasião</label>
-  <select name="ocasiao" id="ocasiao" required>
-    <option value="">Selecione</option>
-    <option>Aniversário</option>
-    <option>Reunião</option>
-    <option>Confraternização</option>
-    <option value="Outro">Outro</option>
-  </select>
-
-  <div id="campoOutro">
-    <label>Descreva a Ocasião</label>
-    <input type="text" name="ocasiao_outro">
-  </div>
-
-  <label>Decoração</label>
-  <input type="text" name="decoracao" placeholder="Ex: Balões, flores...">
-
-  <label>Comandas Individuais</label>
-  <div class="radio-group">
-    <label><input type="radio" name="comandas" value="Sim" required> Sim</label>
-    <label><input type="radio" name="comandas" value="Não" required> Não</label>
-  </div>
-
-  <label>Observações</label>
-  <textarea name="obs" rows="3"></textarea>
-
-  <div id="alerta-email">A confirmação será enviada por e-mail.</div>
-
-  <button type="submit" id="btnEnviar">
-    <span class="btn-text">Enviar Reserva</span>
-    <div class="btn-loader"></div>
-  </button>
-</form>
-
 </div>
 
-<!-- POPUP -->
-<div class="popup-overlay" id="popup">
-  <div class="popup">
-    <h2>✅ Reserva Enviada!</h2>
-    <p>Sua solicitação foi registrada com sucesso.</p>
-    <button onclick="fecharPopup()">Fechar</button>
-  </div>
-</div>
-
+<div id="toast" class="toast"></div>
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzIsRIuWAi4IoueIV7f8-5vhKWBLTg3HfoTC6Rk5UWAFyzeK3pba9Cjvs5di7xbF_JxsA/exec"; // <-- substituir depois
+/* ===============================
+   CONFIG
+================================*/
+const endpoint = "SEU_ENDPOINT_AQUI"; 
+// exemplo depois você troca:
+// "https://script.google.com/macros/s/AKfycbXXXXXXXX/exec"
 
-/* ======== LOGIN ======== */
-const loginBox = document.getElementById("loginBox");
-const appBox = document.getElementById("appBox");
-const btnLogin = document.getElementById("btnLogin");
 
-btnLogin.addEventListener("click", async () => {
-  const usuario = loginUser.value.trim();
-  const senha   = loginPass.value.trim();
+/* ===============================
+   SHORTCUTS & HELPERS
+================================*/
+const $ = (s, el=document)=> el.querySelector(s);
+const $$ = (s, el=document)=> Array.from(el.querySelectorAll(s));
 
-  if (!usuario || !senha) {
-    alert("Preencha usuário e senha.");
-    return;
-  }
+const toast = (msg, ms=3500)=>{
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(()=> el.classList.remove("show"), ms);
+};
 
-  const body = { action: "login", usuario, senha };
+const formatBRLInput = v => {
+  const only = v.replace(/[^\d]/g,'');
+  return (Number(only)/100).toLocaleString('pt-BR',{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+};
+const parseBRL = v =>{
+  if(!v) return 0;
+  const s = v.replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',', '.');
+  return Number(s)||0;
+};
 
-  const res = await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify(body)
-  }).then(r=>r.json());
+const maskPhone = v=>{
+  const d = v.replace(/\D/g,'').slice(0,11);
+  return d.length<=10
+    ? d.replace(/^(\d{2})(\d{4})(\d{0,4}).*/,"($1) $2-$3")
+    : d.replace(/^(\d{2})(\d{5})(\d{0,4}).*/,"($1) $2-$3");
+};
 
-  if (!res.ok) {
-    alert("Usuário ou senha incorretos.");
-    return;
-  }
+const ymd = d=>{
+  const z=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+};
 
-  localStorage.setItem("USER", JSON.stringify(res));
-
-  loginBox.style.display = "none";
-  appBox.style.display = "block";
+const toBase64 = file=> new Promise((resolve,reject)=>{
+  const r = new FileReader();
+  r.onload = ()=> resolve(r.result);
+  r.onerror = reject;
+  r.readAsDataURL(file);
 });
 
-/* CARREGAR SESSÃO AUTOMÁTICA */
-window.onload = () => {
-  const u = localStorage.getItem("USER");
-  if (u) {
-    loginBox.style.display = "none";
-    appBox.style.display = "block";
+
+/* ===============================
+   AUTENTICAÇÃO
+================================*/
+const tabLogin = $("#tabLogin");
+const tabCadastro = $("#tabCadastro");
+const loginForm = $("#loginForm");
+const cadastroForm = $("#cadastroForm");
+const authBox = $("#authBox");
+const app = $("#app");
+
+tabLogin.onclick = ()=>{
+  tabLogin.classList.add("active");
+  tabCadastro.classList.remove("active");
+  loginForm.style.display = "block";
+  cadastroForm.style.display = "none";
+};
+
+tabCadastro.onclick = ()=>{
+  tabCadastro.classList.add("active");
+  tabLogin.classList.remove("active");
+  loginForm.style.display = "none";
+  cadastroForm.style.display = "block";
+};
+
+/* LOGIN */
+$("#btnLogin").onclick = async ()=>{
+  const usuario = $("#loginUsuario").value.trim();
+  const senha = $("#loginSenha").value.trim();
+
+  if(!usuario || !senha){
+    toast("Preencha usuário e senha.");
+    return;
+  }
+
+  const body = { action:"login", usuario, senha };
+
+  try{
+    const r = await fetch(endpoint,{
+      method:"POST",
+      body:JSON.stringify(body)
+    }).then(r=>r.json());
+
+    if(!r.ok){
+      toast("Usuário ou senha inválidos.");
+      return;
+    }
+
+    // salva sessão
+    localStorage.setItem("USER", JSON.stringify(r));
+
+    authBox.style.display = "none";
+    app.style.display = "block";
+
+    $("#codigoAba").value = r.codigo; // código exclusivo da aba
+
+    refreshAll();
+
+  }catch(e){
+    toast("Erro ao conectar.");
   }
 };
 
-/* ======== FORMULARIO ======== */
-const form = document.getElementById('reservaForm');
-const ocasiaoSelect = document.getElementById('ocasiao');
-const campoOutro = document.getElementById('campoOutro');
-const whatsappInput = document.getElementById('whatsapp');
-const popup = document.getElementById('popup');
-const btn = document.getElementById('btnEnviar');
-const btnText = btn.querySelector('.btn-text');
-const btnLoader = btn.querySelector('.btn-loader');
+/* CADASTRAR */
+$("#btnCadastrar").onclick = async ()=>{
+  const nome = $("#cadNome").value.trim();
+  const email = $("#cadEmail").value.trim();
+  const usuario = $("#cadUsuario").value.trim();
+  const senha = $("#cadSenha").value.trim();
 
-ocasiaoSelect.addEventListener('change',()=>{
-  campoOutro.style.display = ocasiaoSelect.value==='Outro'?'block':'none';
-});
-
-whatsappInput.addEventListener('input',(e)=>{
-  let v=e.target.value.replace(/\D/g,'');
-  v=v.replace(/^(\d{2})(\d)/g,'($1) $2');
-  v=v.replace(/(\d{5})(\d)/,'$1-$2');
-  e.target.value=v.substring(0,15);
-});
-
-/* ENVIO DE RESERVA */
-form.addEventListener('submit',async(e)=>{
-  e.preventDefault();
-
-  const USER = JSON.parse(localStorage.getItem("USER"));
-  if (!USER) {
-    alert("Você precisa estar logado.");
+  if(!nome || !email || !usuario || !senha){
+    toast("Preencha todos os campos.");
     return;
   }
 
-  btn.disabled=true;
-  btnText.style.opacity='0';
-  btnLoader.style.display='block';
-
-  const data = Object.fromEntries(new FormData(form).entries());
-  data.action = "registrarReserva";
-  data.codigoAba = USER.codigo;
+  const body = { action:"criarUsuario", nome, email, usuario, senha };
 
   try{
-    const r = await fetch(scriptURL,{
-      method:'POST',
-      body:JSON.stringify(data)
+    const r = await fetch(endpoint,{
+      method:"POST",
+      body:JSON.stringify(body)
     }).then(r=>r.json());
 
-    if (r.ok){
-      form.reset();
-      campoOutro.style.display='none';
-      abrirPopup();
-    } else {
-      alert("Erro ao enviar.");
+    if(!r.ok){
+      toast("Falha ao criar usuário: " + r.message);
+      return;
     }
-  }catch{
-    alert("Erro ao conectar.");
-  }finally{
-    btn.disabled=false;
-    btnText.style.opacity='1';
-    btnLoader.style.display='none';
+
+    toast("Usuário criado com sucesso!");
+
+    // volta para login
+    tabLogin.click();
+
+  }catch(e){
+    toast("Erro ao conectar.");
   }
+};
+
+
+/* AUTO LOGIN */
+window.onload = ()=>{
+  const u = localStorage.getItem("USER");
+  if(u){
+    const user = JSON.parse(u);
+    authBox.style.display = "none";
+    app.style.display = "block";
+
+    $("#codigoAba").value = user.codigo;
+    refreshAll();
+  }
+};
+
+
+/* ===============================
+   FORMULÁRIO DE RESERVA
+================================*/
+const form = $("#reservaForm");
+const inputTelefone = $("#telefone");
+const inputValor = $("#valorEstimado");
+const inputSinal = $("#pagamentoAntecipado");
+const banco = $("#banco");
+const inputData = $("#datahora");
+
+inputTelefone.oninput = e=> e.target.value = maskPhone(e.target.value);
+inputValor.oninput = e=> e.target.value = formatBRLInput(e.target.value);
+inputSinal.oninput = e=> e.target.value = formatBRLInput(e.target.value);
+
+inputData.min = new Date().toISOString().slice(0,16);
+
+/* ANEXO */
+const inputArquivo = $("#arquivo");
+const fileBox = $("#fileBox");
+const fileName = $("#fileName");
+$("#clearFile").onclick = ()=>{
+  inputArquivo.value = "";
+  fileBox.style.display = "none";
+};
+
+inputArquivo.onchange = ()=>{
+  const f = inputArquivo.files[0];
+  if(!f) return fileBox.style.display = "none";
+
+  if(f.size > 5*1024*1024){
+    toast("Arquivo maior que 5 MB.");
+    inputArquivo.value="";
+    return;
+  }
+
+  fileName.textContent = `${f.name} • ${(f.size/1024/1024).toFixed(2)} MB`;
+  fileBox.style.display = "flex";
+};
+
+
+/* SUBMIT FORM */
+form.onsubmit = async(e)=>{
+  e.preventDefault();
+
+  if(!form.checkValidity()){
+    toast("Preencha os campos obrigatórios.");
+    return;
+  }
+
+  const payload = Object.fromEntries(new FormData(form).entries());
+  payload.valorEstimado = String(parseBRL(payload.valorEstimado||0));
+  payload.pagamentoAntecipado = String(parseBRL(payload.pagamentoAntecipado||0));
+
+  const file = inputArquivo.files[0];
+  if(file){
+    const b64 = await toBase64(file);
+    payload.arquivo = b64.split(',')[1];
+    payload.nomeArquivo = file.name;
+  }
+
+  try{
+    const r = await fetch(endpoint,{
+      method:"POST",
+      body:new URLSearchParams({ ...payload })
+    }).then(r=>r.text());
+
+    toast("Reserva salva!");
+    form.reset();
+    fileBox.style.display="none";
+    refreshAll();
+
+  }catch(e){
+    toast("Erro ao salvar reserva.");
+  }
+};
+
+
+/* ===============================
+   CALENDÁRIO
+================================*/
+const state = {
+  mes: (new Date()).getMonth(),
+  ano: (new Date()).getFullYear(),
+  reservas: []
+};
+
+const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+const dowShort = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+$("#calDow").innerHTML = dowShort.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+
+async function loadMonth(ano, mes){
+  try{
+    const user = JSON.parse(localStorage.getItem("USER"));
+    const url = `${endpoint}?acao=listar&ano=${ano}&mes=${mes+1}&codigoAba=${user.codigo}`;
+
+    const data = await fetch(url).then(r=>r.json());
+
+    state.reservas = data.map((r,i)=>({
+      id: r.id || `ROW-${i+1}`,
+      nome:r.nome,
+      email:r.email,
+      telefone:r.telefone,
+      pessoas:r.pessoas,
+      mesa:r.mesa,
+      cardapio:r.cardapio,
+      observacoes:r.observacoes,
+      datahora:r.datahora,
+      valorEstimado:r.valorEstimado,
+      pagamentoAntecipado:r.pagamentoAntecipado,
+      valorFinalPago:r.valorFinalPago,
+      banco:r.banco,
+      status:r.status
+    }));
+
+  }catch(e){
+    state.reservas=[];
+    toast("Erro ao carregar mês.");
+  }
+
+  buildCalendar();
+  updateSummary();
+}
+
+function buildCalendar(){
+  const {mes, ano} = state;
+
+  $("#calTitle").textContent = `${monthNames[mes]} de ${ano}`;
+  $("#calGrid").innerHTML = "";
+
+  const first = new Date(ano, mes, 1);
+  const start = new Date(first);
+  const startDay = (first.getDay()+7)%7;
+  start.setDate(1 - startDay);
+
+  for(let i=0; i<42; i++){
+    const d = new Date(start);
+    d.setDate(start.getDate()+i);
+
+    const inMonth = d.getMonth() === mes;
+    const cell = document.createElement("button");
+    cell.className = "cal-day" + (inMonth? "" : " out");
+    cell.dataset.date = ymd(d);
+
+    const items = state.reservas.filter(r => r.datahora && ymd(new Date(r.datahora)) === ymd(d));
+
+    // agrupa mesas
+    const groups = {};
+    items.forEach(r=>{
+      const m = (r.mesa||"").toUpperCase();
+      if(!groups[m]) groups[m] = 0;
+      groups[m]++;
+    });
+
+    const tags = Object.entries(groups).map(([mesa, qtd])=>{
+      const vip = mesa.includes("VIP");
+      return `<span class="tag ${vip?"t-vip":"t-outros"}">${qtd} ${mesa}</span>`;
+    }).join('');
+
+    const pend = items.filter(r=>r.status !== "Concluída").length;
+    const done = items.filter(r=>r.status === "Concluída").length;
+
+    cell.innerHTML = `
+      <div class="num">${d.getDate()}</div>
+      <div class="tags">
+        ${tags}
+        ${pend ? `<span class="tag t-pend">Pend: ${pend}</span>` : ""}
+        ${done ? `<span class="tag t-done">Conc: ${done}</span>` : ""}
+      </div>
+    `;
+
+    cell.onclick = ()=> openDayModal(d, items);
+    $("#calGrid").appendChild(cell);
+  }
+}
+
+
+/* ===============================
+   MODAL DO DIA
+================================*/
+const dayModal = $("#dayModal");
+const modalList = $("#modalList");
+
+function openDayModal(date, items){
+  $("#modalTitle").textContent = "Reservas de " + date.toLocaleDateString("pt-BR");
+
+  if(!items.length){
+    modalList.innerHTML = "<div class='meta'>Nenhuma reserva neste dia.</div>";
+  } else {
+    modalList.innerHTML = items.map(r=>renderResItem(r)).join('');
+    $$(".btn-concluir").forEach(btn => btn.onclick = onClickConcluir);
+    $$(".btn-excluir").forEach(btn => btn.onclick = onClickExcluir);
+  }
+
+  dayModal.classList.add("show");
+}
+
+dayModal.onclick = e=>{
+  if(e.target === dayModal) dayModal.classList.remove("show");
+};
+
+function renderResItem(r){
+  const hora = new Date(r.datahora).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  return `
+  <div class="res-item">
+    <div class="top">
+      <div>
+        <div class="name">${r.nome}</div>
+        <div class="meta">${hora} • ${r.mesa} • ${r.pessoas} pessoas</div>
+      </div>
+      <div class="row" style="display:flex;gap:6px;">
+        <button class="btn-editar" data-id="${r.id}">Editar</button>
+        <button class="btn-danger btn-excluir" data-id="${r.id}">Excluir</button>
+        <button class="btn-concluir" data-id="${r.id}">Concluir</button>
+      </div>
+    </div>
+    <div class="meta"><b>Tel:</b> ${r.telefone}</div>
+    <div class="meta"><b>E-mail:</b> ${r.email}</div>
+    <div class="meta"><b>Obs:</b> ${r.observacoes||"—"}</div>
+  </div>
+  `;
+}
+
+
+/* ===============================
+   CONCLUIR
+================================*/
+let finishId = null;
+$("#cancelFinish").onclick = ()=>{
+  $("#finishModal").classList.remove("show");
+  finishId = null;
+};
+
+function onClickConcluir(e){
+  finishId = e.currentTarget.dataset.id;
+  $("#finishModal").classList.add("show");
+}
+
+$("#finishModal").onclick = e=>{
+  if(e.target=== $("#finishModal")) $("#finishModal").classList.remove("show");
+};
+
+$("#confirmFinish").onclick = async ()=>{
+  const valor = parseBRL($("#finalPagoInput").value);
+  if(!(valor>0)){
+    toast("Informe valor válido.");
+    return;
+  }
+
+  try{
+    const r = await fetch(endpoint,{
+      method:"POST",
+      body:new URLSearchParams({
+        acao:"concluir",
+        id:finishId,
+        valorFinalPago:String(valor)
+      })
+    }).then(r=>r.text());
+
+    toast("Reserva concluída!");
+    $("#finishModal").classList.remove("show");
+
+    refreshAll();
+
+  }catch(e){
+    toast("Erro ao concluir.");
+  }
+};
+
+
+/* ===============================
+   EXCLUIR
+================================*/
+async function onClickExcluir(e){
+  const id = e.currentTarget.dataset.id;
+  if(!confirm("Excluir reserva?")) return;
+
+  try{
+    const r = await fetch(endpoint,{
+      method:"POST",
+      body:new URLSearchParams({
+        acao:"excluir",
+        id
+      })
+    }).then(r=>r.text());
+
+    toast("Reserva excluída!");
+    refreshAll();
+
+  }catch(e){
+    toast("Erro ao excluir.");
+  }
+}
+
+
+/* ===============================
+   RESUMO
+================================*/
+function sumExtras(r){
+  return 0; // versão simples — caso queira extras depois adiciono
+}
+
+function updateSummary(){
+  const {mes, ano} = state;
+
+  const inMonth = state.reservas.filter(r=>{
+    const d = new Date(r.datahora);
+    return d.getMonth()===mes && d.getFullYear()===ano;
+  });
+
+  const adiantado = inMonth.reduce((t,r)=> t + parseBRL(r.pagamentoAntecipado||0),0);
+  const finalPago = inMonth.reduce((t,r)=> t + parseBRL(r.valorFinalPago||0),0);
+
+  const aReceber = inMonth
+    .filter(r=> r.status!=="Concluída")
+    .reduce((t,r)=>{
+      const est = parseBRL(r.valorEstimado||0);
+      const ant = parseBRL(r.pagamentoAntecipado||0);
+      return t + Math.max(est - ant, 0);
+    },0);
+
+  $("#kpiAntecipado").textContent = adiantado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  $("#kpiFinalPago").textContent = finalPago.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  $("#kpiAReceber").textContent = aReceber.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  $("#kpiTotalMes").textContent = (adiantado+finalPago).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+}
+
+
+/* ===============================
+   NAVEGAÇÃO DO CALENDÁRIO
+================================*/
+$("#prevMonth").onclick = ()=>{
+  const d = new Date(state.ano, state.mes, 1);
+  d.setMonth(d.getMonth()-1);
+  state.mes = d.getMonth();
+  state.ano = d.getFullYear();
+  refreshAll();
+};
+
+$("#nextMonth").onclick = ()=>{
+  const d = new Date(state.ano, state.mes, 1);
+  d.setMonth(d.getMonth()+1);
+  state.mes = d.getMonth();
+  state.ano = d.getFullYear();
+  refreshAll();
+};
+
+$("#todayBtn").onclick = ()=>{
+  const t = new Date();
+  state.mes = t.getMonth();
+  state.ano = t.getFullYear();
+  refreshAll();
+};
+
+$("#refreshBtn").onclick = ()=> refreshAll();
+
+
+/* ===============================
+   REFRESH
+================================*/
+async function refreshAll(){
+  await loadMonth(state.ano, state.mes);
+}
+
+
+/* ===============================
+   INIT
+================================*/
+document.addEventListener("DOMContentLoaded", ()=>{
+  if($("#datahora")) $("#datahora").min = new Date().toISOString().slice(0,16);
 });
-
-function abrirPopup(){ popup.style.display='flex'; }
-function fecharPopup(){ popup.style.display='none'; }
 </script>
-
 </body>
 </html>
